@@ -7,5 +7,17 @@ const getEvents = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// eslint-disable-next-line import/prefer-default-export
-export { getEvents };
+const createEvent = (event) => new Promise((resolve, reject) => {
+  fetch('http://localhost:8000/events', {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(event),
+  })
+    .then((response) => response.json())
+    .then(resolve)
+    .catch(reject);
+});
+
+export { getEvents, createEvent };

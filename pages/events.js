@@ -1,10 +1,12 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import EventCard from '../components/event/EventCard';
 import { getEvents } from '../utils/data/eventData';
 
 function Events() {
   const [events, setEvents] = useState([]);
-
+  const router = useRouter();
   useEffect(() => {
     getEvents().then((data) => setEvents(data));
   }, []);
@@ -17,6 +19,13 @@ function Events() {
           <EventCard game={event.game.title} description={event.description} date={event.date} time={event.time} organizer={event.organizer.bio} />
         </section>
       ))}
+      <Button
+        onClick={() => {
+          router.push('/events/new');
+        }}
+      >
+        Register New Game
+      </Button>
     </article>
   );
 }
