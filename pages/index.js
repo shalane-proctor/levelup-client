@@ -1,26 +1,37 @@
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { signOut } from '../utils/auth';
-import { useAuth } from '../utils/context/authContext';
+import GameCard from '../components/game/GameCard';
+import { getGames } from '../utils/data/gameData';
 
 function Home() {
-  const { user } = useAuth();
+  const [games, setGames] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    getGames().then(setGames);
+  }, []);
+  console.log((games));
   return (
-    <div
-      className="text-center d-flex flex-column justify-content-center align-content-center"
-      style={{
-        height: '90vh',
-        padding: '30px',
-        maxWidth: '400px',
-        margin: '0 auto',
-      }}
-    >
-      <h1>Hello {user.fbUser.displayName}! </h1>
-      <p>Your Bio: {user.bio}</p>
-      <p>Click the button below to logout!</p>
-      <Button variant="danger" type="button" size="lg" className="copy-btn" onClick={signOut}>
-        Sign Out
-      </Button>
-    </div>
+    <>
+      <article className="games">
+        <h1>Games</h1>
+        <div className="gamesCard">
+          {games.map((game) => (
+            <section key={`game--${game.id}`} className="game">
+              <GameCard id={game.id} title={game.title} maker={game.maker} numberOfPlayers={game.number_of_players} skillLevel={game.skill_level} gameTypeId={game.game_type} />
+            </section>
+          ))}
+        </div>
+        <Button
+          onClick={() => {
+            router.push('/games/new');
+          }}
+        >
+          Register New Game
+        </Button>
+      </article>
+    </>
   );
 }
 
