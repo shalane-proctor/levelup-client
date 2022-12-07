@@ -7,12 +7,13 @@ import { getGames } from '../../utils/data/gameData';
 
 const EventForm = ({ user }) => {
   const [games, setGames] = useState([]);
-  const [currentEvent, setCurrentEvent] = useState({
+  const initialState = {
     game: '',
     description: '',
     date: '',
     time: '',
-  });
+  };
+  const [currentEvent, setCurrentEvent] = useState(initialState);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,14 +30,15 @@ const EventForm = ({ user }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.warn(currentEvent, user);
     const event = {
       description: currentEvent.description,
       date: currentEvent.date,
       time: currentEvent.time,
-      game: Number(currentEvent.gameId),
-      organizer: user.id,
+      game: currentEvent.game,
+      organizer: user.uid,
     };
-    createEvent(event).then(() => router.push('/'));
+    createEvent(event).then(() => router.push('/events'));
   };
 
   return (
@@ -49,10 +51,10 @@ const EventForm = ({ user }) => {
           <Form.Control name="date" required value={currentEvent.date} onChange={handleChange} />
           <Form.Label>Time</Form.Label>
           <Form.Control name="time" required value={currentEvent.time} onChange={handleChange} />
-          <Form.Select name="gameId" onChange={handleChange}>
+          <Form.Select name="game" onChange={handleChange}>
             <option>Open this select menu</option>
             {games?.map((game) => (
-              <option key={game.id} value={game.id} selected={currentEvent.gameId === game.id}>
+              <option key={game.id} value={game.id} selected={currentEvent.game === game.id}>
                 {game.title}
               </option>
             ))}
@@ -68,8 +70,25 @@ const EventForm = ({ user }) => {
 
 EventForm.propTypes = {
   user: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    uid: PropTypes.string.isRequired,
   }).isRequired,
+  eventObj: PropTypes.shape({
+    id: PropTypes.number,
+    game: PropTypes.number,
+    description: PropTypes.string,
+    date: PropTypes.string,
+    time: PropTypes.string,
+  }),
+};
+
+EventForm.defaultProps = {
+  eventObj: PropTypes.shape({
+    id: '',
+    game: '',
+    description: '',
+    date: '',
+    time: '',
+  }),
 };
 
 export default EventForm;

@@ -16,19 +16,21 @@ function Home() {
     <>
       <article className="games">
         <h1>Games</h1>
-        {games.map((game) => (
-          <section key={`game--${game.id}`} className="game">
-            <GameCard title={game.title} maker={game.maker} numberOfPlayers={game.number_of_players} skillLevel={game.skill_level} gameType={game?.game_type?.label} />
-          </section>
-        ))}
+        <div className="gamesCard">
+          {games.map((game) => (
+            <section key={`game--${game.id}`} className="game">
+              <GameCard id={game.id} title={game.title} maker={game.maker} numberOfPlayers={game.number_of_players} skillLevel={game.skill_level} gameTypeId={game.game_type} />
+            </section>
+          ))}
+        </div>
+        <Button
+          onClick={() => {
+            router.push('/games/new');
+          }}
+        >
+          Register New Game
+        </Button>
       </article>
-      <Button
-        onClick={() => {
-          router.push('/games/new');
-        }}
-      >
-        Register New Game
-      </Button>
     </>
   );
 }

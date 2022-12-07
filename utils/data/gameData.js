@@ -7,24 +7,49 @@ const getGames = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const createGame = (game) => new Promise((resolve, reject) => {
-  fetch('http://localhost:8000/games', {
-    method: 'POST', // or 'PUT'
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(game),
-  })
+const getSingleGame = (gameId) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/games/${gameId}`)
     .then((response) => response.json())
-    .then(resolve)
-    .catch(reject);
+    .then((data) => {
+      resolve({
+        id: data.id,
+        maker: data.maker,
+        skillLevel: data.skill_level,
+        numberOfPlayers: data.number_of_players,
+        title: data.title,
+        gameTypeId: data.game_type,
+      });
+    })
+    .catch((error) => reject(error));
+});
+
+const createGame = (game) => new Promise((resolve, reject) => {
+  const gameObj = {
+    maker: game?.maker,
+    title: game?.title,
+    number_of_players: Number(game?.numberOfPlayers),
+    skill_level: Number(game?.skillLevel),
+    game_type: Number(game?.gameTypeId),
+    user_id: game?.user_id,
+  };
+  fetch(`${clientCredentials.databaseURL}/games`, {
+    method: 'POST',
+    body: JSON.stringify(gameObj),
+    headers: {
+      'content-type': 'application/json',
+    },
+  })
+    .then((response) => resolve(response.json()))
+    .catch((error) => reject(error));
 });
 
 const getGameTypes = () => new Promise((resolve, reject) => {
-  fetch('http://localhost:8000/gametypes')
+  fetch(`${clientCredentials.databaseURL}/gametypes`)
     .then((response) => response.json())
     .then(resolve)
     .catch(reject);
 });
 
-export { getGames, createGame, getGameTypes };
+export {
+  getGames, getSingleGame, createGame, getGameTypes,
+};

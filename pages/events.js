@@ -24,7 +24,7 @@ function Events() {
           router.push('/events/new');
         }}
       >
-        Register New Game
+        Register New Event
       </Button>
     </article>
   );

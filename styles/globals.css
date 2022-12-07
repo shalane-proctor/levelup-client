@@ -16,7 +16,37 @@ a {
 * {
   box-sizing: border-box;
 }
-
+.example::-webkit-scrollbar {
+  display: none;
+}
 body {
   background-color: #88effd;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.games {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+.gamesCard {
+  width: 90vw;
+  height: 80vh;
+  overflow: scroll;
+  display: flex;
+  flex-flow: row wrap-reverse;
+  justify-content: space-around;
+}
+.gamesCard::-webkit-scrollbar {
+  display: none;
+}
+.game {
+  width: 18rem;
+  height: 15rem;
 }

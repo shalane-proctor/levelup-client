@@ -6,27 +6,22 @@ import { createGame, getGameTypes } from '../../utils/data/gameData';
 
 const GameForm = ({ user }) => {
   const [gameTypes, setGameTypes] = useState([]);
-  /*
-  Since the input fields are bound to the values of
-  the properties of this state variable, you need to
-  provide some default values.
-  */
-  const [currentGame, setCurrentGame] = useState({
+  const initialState = {
     skillLevel: 1,
-    numberOfPlayers: 0,
+    numberOfPlayers: 1,
     title: '',
     maker: '',
     gameTypeId: 0,
-  });
+    user_id: 1,
+  };
+  const [currentGame, setCurrentGame] = useState(initialState);
   const router = useRouter();
 
   useEffect(() => {
-    // TODO: Get the game types, then set the state
     getGameTypes().then(setGameTypes);
   }, []);
 
   const handleChange = (e) => {
-    // TODO: Complete the onChange function
     const { name, value } = e.target;
     setCurrentGame((prevState) => ({
       ...prevState,
@@ -37,13 +32,13 @@ const GameForm = ({ user }) => {
   const handleSubmit = (e) => {
     // Prevent form from being submitted
     e.preventDefault();
-
+    console.warn(currentGame, user);
     const game = {
-      maker: currentGame.maker,
       title: currentGame.title,
-      number_of_players: Number(currentGame.numberOfPlayers),
-      skill_level: Number(currentGame.skillLevel),
-      game_type: Number(currentGame.gameTypeId),
+      maker: currentGame.maker,
+      numberOfPlayers: currentGame.numberOfPlayers,
+      skillLevel: currentGame.skillLevel,
+      gameTypeId: currentGame.gameTypeId,
       user_id: user.uid,
     };
 
@@ -57,13 +52,20 @@ const GameForm = ({ user }) => {
         <Form.Group className="mb-3">
           <Form.Label>Title</Form.Label>
           <Form.Control name="title" required value={currentGame.title} onChange={handleChange} />
-          {/* TODO: create the rest of the input fields */}
+        </Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Maker</Form.Label>
           <Form.Control name="maker" required value={currentGame.maker} onChange={handleChange} />
+        </Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Number of Players</Form.Label>
-          <Form.Control name="number_of_players" required value={currentGame.number_of_players} onChange={handleChange} />
+          <Form.Control name="numberOfPlayers" type="number" required value={currentGame.numberOfPlayers} onChange={handleChange} />
+        </Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Skill Level (1-10)</Form.Label>
-          <Form.Control name="skill_level" required value={currentGame.skill_level} onChange={handleChange} />
+          <Form.Control name="skillLevel" type="number" required value={currentGame.skillLevel} onChange={handleChange} />
+        </Form.Group>
+        <Form.Group className="mb-3">
           <Form.Select name="gameTypeId" onChange={handleChange}>
             <option>Open this select menu</option>
             {gameTypes?.map((gameType) => (
@@ -73,6 +75,7 @@ const GameForm = ({ user }) => {
             ))}
           </Form.Select>
         </Form.Group>
+
         <Button variant="primary" type="submit">
           Submit
         </Button>
@@ -85,6 +88,25 @@ GameForm.propTypes = {
   user: PropTypes.shape({
     uid: PropTypes.string.isRequired,
   }).isRequired,
+  gameObj: PropTypes.shape({
+    id: PropTypes.number,
+    numberOfPlayers: PropTypes.number,
+    skillLevel: PropTypes.number,
+    title: PropTypes.string,
+    maker: PropTypes.string,
+    gameTypeId: PropTypes.number,
+  }),
+};
+
+GameForm.defaultProps = {
+  gameObj: PropTypes.shape({
+    id: '',
+    numberOfPlayers: '',
+    skillLevel: '',
+    title: '',
+    maker: '',
+    gameTypeId: '',
+  }),
 };
 
 export default GameForm;
