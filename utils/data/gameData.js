@@ -43,6 +43,24 @@ const createGame = (game) => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
+const updateGame = (user, game, id) => new Promise((resolve, reject) => {
+  const gameObj = {
+    maker: game.maker,
+    title: game.title,
+    number_of_players: Number(game.numberOfPlayers),
+    skill_level: Number(game.skillLevel),
+    game_type: Number(game.gameTypeId),
+    user_id: user.uid,
+  };
+  fetch(`${clientCredentials.databaseURL}/games/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(gameObj),
+  })
+    .then((response) => resolve(response))
+    .catch((error) => reject(error));
+});
+
 const getGameTypes = () => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/gametypes`)
     .then((response) => response.json())
@@ -51,5 +69,5 @@ const getGameTypes = () => new Promise((resolve, reject) => {
 });
 
 export {
-  getGames, getSingleGame, createGame, getGameTypes,
+  getGames, getSingleGame, createGame, getGameTypes, updateGame,
 };
